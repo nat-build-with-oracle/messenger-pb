@@ -1,0 +1,14 @@
+server/data/
+*.db
+*.db-*
+*.jsonl
+*.log
+*.pid
+*.apk
+node_modules/
+.DS_Store
+native/webdist/
+native/messenger-android
+pb/sqweb/dist/
+pb/ui/node_modules/
+pb/embed/__pycache__/

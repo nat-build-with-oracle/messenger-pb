@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Sukhumvit Set", "Noto Sans Thai", system-ui, sans-serif;
+  /* Warm charcoal, like a lamp-lit room: every neutral leans a little toward amber. */
+  --color-bg: #13120f;
+  --color-panel: #1c1a17;
+  --color-card: #211f1b;
+  --color-sunk: #0e0d0b;
+  --color-rule: #2f2b26;
+  --color-raised: #2a2723;      /* chips, round buttons, search */
+  --color-raised-hi: #36322d;   /* their hover */
+  --color-hover: #24221e;       /* list rows, rail */
+  --color-active: #2e2a25;      /* the current page */
+  --color-select: #2a2b3b;      /* the open row, a dusk blue */
+  --color-select-ink: #a9c4ff;
+  --color-ink: #ede7dd;
+  --color-muted: #a59c8f;
+  --color-amber: #e8ad4f;
+  --color-green: #5cb98a;
+  --color-red: #e47565;
+  --color-blue: #6aa8e6;
+  --color-bubble: #2f2c28;
+  --color-bubble-ink: #eee8de;
+  --color-mine: #2f7cf6;
+  --color-approve: #1d5a3b;
+  --color-approve-rule: #2f8257;
+  --color-approve-ink: #ede7dd;
+  --color-line-ink: #5fd08f;
+  --color-discord-ink: #9aa3ff;
+  --radius-xl: 0.9rem;
+}
+
+/* Themes: the same tokens, other values. Dark (above) is the default; html[data-theme] is set by
+   theme.ts before the first render ("auto" follows the system). */
+:root { color-scheme: dark; }
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #f4f3f0; --color-panel: #ffffff; --color-card: #f8f7f4; --color-sunk: #efede8;
+  --color-rule: #e2ded6; --color-raised: #eeebe6; --color-raised-hi: #e3dfd8; --color-hover: #f1efeb;
+  --color-active: #e8e4dd; --color-select: #e2eafb; --color-select-ink: #2353ad;
+  --color-ink: #1d1b18; --color-muted: #6c655b; --color-amber: #a86c0e; --color-green: #2b8457;
+  --color-red: #c0442f; --color-blue: #2b6bb5; --color-bubble: #ecebe7; --color-bubble-ink: #1d1b18;
+  --color-mine: #2f7cf6; --color-approve: #2b8457; --color-approve-rule: #237048; --color-approve-ink: #ffffff;
+  --color-line-ink: #138a45; --color-discord-ink: #4b55d6;
+}
+/* Paper: warm ivory and ink, like a notebook under daylight; your own bubbles in sepia. */
+:root[data-theme="paper"] {
+  color-scheme: light;
+  --color-bg: #efe7d8; --color-panel: #fbf6ec; --color-card: #f5eee1; --color-sunk: #ebe2d1;
+  --color-rule: #dccfb8; --color-raised: #ece2d0; --color-raised-hi: #e2d5bf; --color-hover: #f2eadc;
+  --color-active: #e7dbc5; --color-select: #efdfc1; --color-select-ink: #84470f;
+  --color-ink: #2c2318; --color-muted: #776650; --color-amber: #a2600d; --color-green: #3c7a4c;
+  --color-red: #b0432d; --color-blue: #3a6898; --color-bubble: #eee4d3; --color-bubble-ink: #2c2318;
+  --color-mine: #8a5526; --color-approve: #3c7a4c; --color-approve-rule: #336a41; --color-approve-ink: #fffaf0;
+  --color-line-ink: #2f7a45; --color-discord-ink: #5a5fb8;
+}
+
+body { @apply bg-bg text-ink font-sans antialiased; font-variant-numeric: tabular-nums; }
+@layer base {
+  ::selection { background: color-mix(in oklab, var(--color-amber) 35%, transparent); color: var(--color-ink); }
+  :focus-visible { outline: 2px solid color-mix(in oklab, var(--color-select-ink) 70%, transparent); outline-offset: 2px; border-radius: 10px; }
+  * { scrollbar-width: thin; scrollbar-color: var(--color-rule) transparent; }
+  input { caret-color: var(--color-amber); }
+}
+
+/* Everything clickable gets the hand cursor (Tailwind v4 resets buttons to the arrow). */
+@layer base {
+  button, a[href], summary, select, label[for], [role="button"], input[type="checkbox"], input[type="radio"] { cursor: pointer; }
+  button:disabled, [aria-disabled="true"] { cursor: default; }
+}
+
+/* Messenger-style bubble runs: corners flatten where bubbles from one sender touch. */
+.run-them > .bb + .bb { border-top-left-radius: 4px; }
+.run-them > .bb:has(+ .bb) { border-bottom-left-radius: 4px; }
+.run-me > .bb + .bb { border-top-right-radius: 4px; }
+.run-me > .bb:has(+ .bb) { border-bottom-right-radius: 4px; }
+
+@utility field {
+  @apply w-full rounded-lg border border-rule bg-sunk px-2.5 py-2 text-ink outline-none focus:border-muted;
+}
+@utility btn {
+  @apply min-h-10 cursor-pointer rounded-lg border border-rule bg-raised px-3.5 py-2 text-ink hover:bg-raised-hi disabled:cursor-default disabled:opacity-50;
+}
+@utility btn-approve {
+  @apply min-h-10 cursor-pointer rounded-lg border border-approve-rule bg-approve px-3.5 py-2 font-semibold text-approve-ink disabled:cursor-default disabled:opacity-50;
+}
+@utility btn-quiet {
+  @apply min-h-8 cursor-pointer rounded-lg px-2.5 py-1 text-[13px] text-muted hover:text-ink disabled:opacity-50;
+}
+
+/* Rows that scroll sideways (the top bar's pages on a narrow window) scroll without a bar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Demo mode (privacy.ts): pictures in chats and proofs are blurred beyond reading. */
+:root[data-privacy="on"] .bb img,
+:root[data-privacy="on"] .bb video,
+:root[data-privacy="on"] img.pii { filter: blur(22px) saturate(0.4); }
